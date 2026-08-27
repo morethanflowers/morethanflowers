@@ -139,16 +139,20 @@ export default function Home() {
         <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
         <span>Our song</span>
         <h2>Redemption</h2>
-        <p>Drake · Views</p>
+        <p>Drake · Views · Official YouTube audio</p>
         <iframe
-          title="Redemption by Drake on Spotify"
-          src="https://open.spotify.com/embed/track/4cRBqWBjuccCowYVHFlXK6?utm_source=generator&theme=0"
+          title="Redemption by Drake on YouTube"
+          src="https://www.youtube-nocookie.com/embed/I0xiIGuRMZc?rel=0&playsinline=1"
           width="100%"
-          height="152"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          height="202"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
           loading="lazy"
         />
-        <small>Press play once and it will stay with you while you read.</small>
+        <small>Press play once and the full official track will stay open while you read.</small>
+        <a className="youtube-link" href="https://www.youtube.com/watch?v=I0xiIGuRMZc" target="_blank" rel="noreferrer">
+          Open the official track on YouTube
+        </a>
       </aside>
 
       <header id="top" className="hero">

@@ -52,6 +52,7 @@ button, a { font: inherit; }
 .music-player p { margin: 0 0 16px; color: var(--muted); font-size: 10px; letter-spacing: .11em; }
 .music-player iframe { display: block; border: 0; border-radius: 12px; }
 .music-player small { display: block; margin-top: 12px; color: #776f69; font: 11px/1.45 Georgia,serif; }
+.youtube-link { display: inline-block; margin-top: 10px; color: #ad8068; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; text-underline-offset: 4px; }
 .player-close { position: absolute; right: 14px; top: 13px; width: 28px; height: 28px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; font-size: 19px; line-height: 1; }
 
 .hero { min-height: 100svh; position: relative; overflow: hidden; background: radial-gradient(circle at 68% 45%,#3b2b23 0,#17110e 35%,#090909 72%); padding: 18vh clamp(24px,9vw,140px) 10vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
