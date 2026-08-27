@@ -53,7 +53,7 @@ const filmFrames = [
 ];
 
 export default function Home() {
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
   const [theme, setTheme] = useState<'espresso' | 'rose' | 'vanilla'>('vanilla');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
@@ -137,7 +137,7 @@ export default function Home() {
 
       <aside className={`music-player ${soundOn ? 'open' : ''}`} aria-hidden={!soundOn}>
         <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
-        <span>Our song</span>
+        <span>Background music</span>
         <h2>Redemption</h2>
         <p>Drake · Views · Official YouTube audio</p>
         <iframe
@@ -190,19 +190,6 @@ export default function Home() {
           <div className="letter-lead">
             <p>What I should have said sooner</p>
             <h2>I am sorry, Cyd. You did not deserve the hurt I caused.</h2>
-          </div>
-          <div className="letter-body">
-            <p className="dropcap">
-              My choices hurt you and damaged your trust. I understand that clearly, and I am not
-              asking you to make it smaller so I can feel better. I am here to take responsibility
-              and become someone whose actions feel honest, consistent, and safe.
-            </p>
-            <p>
-              You deserved honesty, patience, and care from me. I cannot change what happened, but I
-              can decide what I practice from here. That means no excuses, no pressure, and no asking
-              you to heal on my timeline.
-            </p>
-            <blockquote>“This is not an argument.<br />It is not an excuse.<br /><em>It is an apology.</em>”</blockquote>
           </div>
         </div>
         <div className="orbit-word orbit-listen" aria-hidden="true">listen</div>

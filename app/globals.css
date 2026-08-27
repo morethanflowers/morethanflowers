@@ -84,15 +84,10 @@ button, a { font: inherit; }
 .section-tag span { width: 31px; height: 31px; display: grid; place-items: center; border: 1px solid #39332e; border-radius: 50%; font-family: Georgia,serif; letter-spacing: 0; }
 .section-tag.light { color: #766c64; }
 .section-tag.light span { border-color: #b7aa9d; }
-.letter-section { position: relative; min-height: 110vh; overflow: hidden; background: #0b0a09; padding: clamp(100px,12vw,170px) clamp(24px,8vw,120px); }
-.letter-grid { width: min(1200px,100%); margin: 90px auto 0; display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(50px,9vw,140px); }
+.letter-section { position: relative; min-height: 78vh; overflow: hidden; background: #0b0a09; padding: clamp(100px,12vw,170px) clamp(24px,8vw,120px); display: flex; flex-direction: column; justify-content: center; }
+.letter-grid { width: min(930px,100%); margin: 70px auto 0; }
 .letter-lead > p { margin: 0 0 22px; color: var(--rust); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
 .letter-lead h2 { margin: 0; font: 400 clamp(48px,6.5vw,94px)/.98 Georgia,serif; letter-spacing: -.04em; }
-.letter-body { padding-top: 16vh; color: #bcb2aa; font: 17px/1.8 Georgia,serif; }
-.letter-body p { margin: 0 0 30px; }
-.dropcap::first-letter { float: left; color: var(--ink); font-size: 75px; line-height: .72; padding: 10px 11px 0 0; }
-.letter-body blockquote { margin: 70px 0 0 -8vw; padding: 28px 0 28px 35px; border-left: 1px solid var(--rust); color: var(--ink); font-size: clamp(24px,2.6vw,38px); line-height: 1.35; }
-.letter-body blockquote em { color: #b48a71; }
 .orbit-word { position: absolute; color: rgba(244,239,231,.035); font: italic 140px Georgia,serif; pointer-events: none; }
 .orbit-listen { right: -30px; top: 6%; transform: rotate(8deg); }
 .orbit-learn { left: -50px; bottom: 13%; transform: rotate(-9deg); }
@@ -215,8 +210,7 @@ button, a { font: inherit; }
 .theme-rose .ticker span { color: #d9bdc3; }
 .theme-rose .ticker i { color: #b65472; }
 .theme-rose .letter-section { background: #10070d; }
-.theme-rose .letter-lead > p,.theme-rose .letter-body blockquote em { color: #d4839b; }
-.theme-rose .letter-body blockquote { border-color: #b14f6d; }
+.theme-rose .letter-lead > p { color: #d4839b; }
 .theme-rose .actions-section { background: #ead6d7; color: #281018; }
 .theme-rose .actions-heading h2 em,.theme-rose .film-heading h2 em { color: #933f5b; }
 .theme-rose .actions-heading > p,.theme-rose .promise-card p { color: #71555e; }
@@ -281,10 +275,6 @@ button, a { font: inherit; }
 .theme-vanilla .letter-section .section-tag,.theme-vanilla .film-section .section-tag,.theme-vanilla .closing-section .section-tag { color: #b9a28d; }
 .theme-vanilla .letter-section .section-tag span,.theme-vanilla .film-section .section-tag span,.theme-vanilla .closing-section .section-tag span { border-color: #725443; }
 .theme-vanilla .letter-lead > p { color: #d39a68; }
-.theme-vanilla .letter-body { color: #d4c0ad; }
-.theme-vanilla .dropcap::first-letter,.theme-vanilla .letter-body blockquote { color: #fff4df; }
-.theme-vanilla .letter-body blockquote { border-color: #c88b59; }
-.theme-vanilla .letter-body blockquote em { color: #e5ad7a; }
 .theme-vanilla .orbit-word { color: rgba(255,244,223,.04); }
 .theme-vanilla .actions-section { background: #f4e5c9; color: #38271c; }
 .theme-vanilla .actions-heading h2 em,.theme-vanilla .film-heading h2 em { color: #a9653d; }
@@ -345,9 +335,7 @@ button, a { font: inherit; }
   .ambient-one { width: 90vw; height: 90vw; right: -35vw; top: 24vh; }
   .ambient-two { width: 52vw; height: 52vw; right: -7vw; top: 31vh; }
   .letter-section { min-height: auto; }
-  .letter-grid { grid-template-columns: 1fr; margin-top: 60px; gap: 20px; }
-  .letter-body { padding-top: 30px; }
-  .letter-body blockquote { margin: 55px 0 0; }
+  .letter-grid { margin-top: 60px; }
   .promise-grid { grid-template-columns: 1fr; }
   .promise-card,.promise-card:nth-child(2),.promise-card:nth-child(n+3),.promise-card:nth-child(4n),.promise-card:nth-child(2n),.promise-card:nth-last-child(-n+2) { min-height: 360px; border: 0; border-bottom: 1px solid #ac9e90; }
   .promise-card:last-child { border-bottom: 0; }
