@@ -15,13 +15,33 @@ const promises = [
   },
   {
     number: '03',
-    title: 'Respect your pace',
-    copy: 'I can ask for another chance, but I cannot rush your healing. I will make room for what you need.',
+    title: 'Share my socials voluntarily',
+    copy: 'You are not responsible for keeping me faithful. That responsibility is mine. This is simply one way I can offer transparency while trust rebuilds.',
   },
   {
     number: '04',
+    title: 'Communicate proactively',
+    copy: 'No secrets and no strategic omissions. I will tell you what matters before you have to discover it, even when honesty has consequences for me.',
+  },
+  {
+    number: '05',
+    title: 'Respect your pace',
+    copy: 'I can ask for another chance, but I cannot rush your healing. I will make room for what you need and respect the pace you choose.',
+  },
+  {
+    number: '06',
     title: 'Protect what we rebuild',
     copy: 'Trust should feel safe in my hands. I want my actions to make that true again, one day at a time.',
+  },
+  {
+    number: '07',
+    title: 'Let us rebuild slowly',
+    copy: 'Remember when I said I was in no rush because we had the rest of our lives to figure things out? I still mean that. Repair should be patient, steady, and real.',
+  },
+  {
+    number: '08',
+    title: 'Keep doing the inner work',
+    copy: 'I started therapy and began identifying the underlying patterns behind my disloyal choices. Understanding them is not an excuse. It is part of changing them.',
   },
 ];
 
@@ -38,7 +58,9 @@ export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
-  const [answer, setAnswer] = useState<'yes' | 'no' | null>(null);
+  const [answer, setAnswer] = useState<'yes' | 'no' | 'over' | null>(null);
+  const [needText, setNeedText] = useState('');
+  const [shareStatus, setShareStatus] = useState('');
 
   useEffect(() => {
     const updateProgress = () => {
@@ -59,6 +81,28 @@ export default function Home() {
     ];
     setNoPosition(positions[dodgeCount]);
     setDodgeCount((count) => count + 1);
+  };
+
+  const shareNeeds = async () => {
+    const response = needText.trim();
+    if (!response) {
+      setShareStatus('Write what you need first.');
+      return;
+    }
+
+    const message = `What I need from you:\n\n${response}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'What I need from you', text: message });
+        setShareStatus('Shared only where you chose.');
+        return;
+      } catch (error) {
+        if ((error as DOMException).name === 'AbortError') return;
+      }
+    }
+
+    await navigator.clipboard.writeText(message);
+    setShareStatus('Copied. You can send it whenever and however you choose.');
   };
 
   return (
@@ -138,18 +182,18 @@ export default function Home() {
         <div className="letter-grid">
           <div className="letter-lead">
             <p>What I should have said sooner</p>
-            <h2>I am sorry, Cyd. I cheated, and I hid the truth from you.</h2>
+            <h2>I am sorry, Cyd. You did not deserve the hurt I caused.</h2>
           </div>
           <div className="letter-body">
             <p className="dropcap">
-              I cheated at the beginning of our relationship. You found out six months later,
-              which means the hurt did not only come from what I did. It also came from realizing
-              I let you keep building with me without knowing the full truth.
+              My choices hurt you and damaged your trust. I understand that clearly, and I am not
+              asking you to make it smaller so I can feel better. I am here to take responsibility
+              and become someone whose actions feel honest, consistent, and safe.
             </p>
             <p>
-              You deserved honesty from the beginning. I was wrong, and I understand why this changed
-              the way you see me and what we built. I am not here to talk you out of your feelings.
-              I am here to own what I did and the trust it damaged.
+              You deserved honesty, patience, and care from me. I cannot change what happened, but I
+              can decide what I practice from here. That means no excuses, no pressure, and no asking
+              you to heal on my timeline.
             </p>
             <blockquote>“This is not an argument.<br />It is not an excuse.<br /><em>It is an apology.</em>”</blockquote>
           </div>
@@ -164,8 +208,8 @@ export default function Home() {
           <div className="section-tag light"><span>02</span> what happens next</div>
           <h2>Sorry is a sentence.<br /><em>Change is the proof.</em></h2>
           <p>
-            A website is still just a gesture. What matters is who I choose to be after you close it.
-            These are the actions I want to practice, not perform.
+            Just like the flowers, this page is only a gesture. It cannot rebuild trust by itself.
+            The proof begins after you close it, through the actions I practice, not perform.
           </p>
         </div>
         <div className="promise-grid">
@@ -208,6 +252,11 @@ export default function Home() {
             Me, formally presenting my case to the court of us with absolutely no legal training,
             one emotional support suit, and a suspicious amount of hope.
           </p>
+          <p className="idea-joke">
+            At this point I am running out of dramatic ideas that might work. My remaining options
+            are skywriting, a twelve slide presentation, or doing the real work consistently.
+            The last one has the best reviews.
+          </p>
           <div className="meme-caption">COME HOME? <span>(respectfully. very respectfully.)</span></div>
         </div>
         <div className="meme-stage" aria-label="A playful suited figure making a dramatic appeal">
@@ -230,11 +279,31 @@ export default function Home() {
         <p className="closing-pre">No pressure. No pretending. Just hope.</p>
         <h2>I want you back, Cyd.<br />Let me <em>show</em> you.</h2>
         <p className="closing-copy">
-          I know my choices gave you a reason to question what we built. I will not call cheating
-          a dumb mistake or ask you to carry the responsibility of saving us. If you are willing,
-          give me the chance to show you through consistent actions that I can be honest, accountable,
-          and safe for you. I want to earn back what I damaged, not talk you into forgetting it.
+          I know my choices gave you a reason to question what we built. I will not minimize the hurt
+          or ask you to carry the responsibility of saving us. If you are willing, give me the chance
+          to show you through consistent actions that I can be honest, accountable, and safe for you.
+          I want to earn back what I damaged, not talk you into forgetting it.
         </p>
+
+        <div className="needs-card">
+          <span>Your voice belongs here too</span>
+          <h3>What would you need from me for this to have a real chance?</h3>
+          <textarea
+            value={needText}
+            onChange={(event) => {
+              setNeedText(event.target.value);
+              setShareStatus('');
+            }}
+            placeholder="Say it plainly. Boundaries, questions, time, actions, or anything else."
+            rows={5}
+            aria-label="What you need from me"
+          />
+          <div className="needs-actions">
+            <button type="button" onClick={shareNeeds}>Share this in my own way</button>
+            <small>Nothing leaves this page until you choose where to send it.</small>
+          </div>
+          {shareStatus && <p className="share-status" role="status">{shareStatus}</p>}
+        </div>
 
         {!answer && (
           <div className="answer-zone" aria-label="Would you give us another chance?">
@@ -249,6 +318,9 @@ export default function Home() {
               style={{ transform: `translate(${noPosition.x}px, ${noPosition.y}px)` }}
             >
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
+            </button>
+            <button className="over-button" type="button" onClick={() => setAnswer('over')}>
+              I do not want to make this work. I am over us.
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
             {dodgeCount >= 3 && <span className="dodge-note">Joke over. Your choice is yours.</span>}
@@ -268,6 +340,14 @@ export default function Home() {
             <span>♡</span>
             <h3>I understand.</h3>
             <p>Thank you for reading this far. Your answer, your space, and your feelings are yours to keep.</p>
+          </div>
+        )}
+
+        {answer === 'over' && (
+          <div className="answer-card" role="status">
+            <span>♡</span>
+            <h3>I hear you.</h3>
+            <p>I will respect your answer. Thank you for reading, and I am sorry for the hurt I caused.</p>
           </div>
         )}
 
