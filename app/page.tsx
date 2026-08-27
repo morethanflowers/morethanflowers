@@ -54,7 +54,7 @@ const filmFrames = [
 
 export default function Home() {
   const [soundOn, setSoundOn] = useState(false);
-  const [theme, setTheme] = useState<'espresso' | 'rose'>('espresso');
+  const [theme, setTheme] = useState<'espresso' | 'rose' | 'vanilla'>('vanilla');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
@@ -129,6 +129,9 @@ export default function Home() {
         </button>
         <button type="button" className={theme === 'rose' ? 'active' : ''} onClick={() => setTheme('rose')} aria-pressed={theme === 'rose'}>
           <i className="swatch rose-swatch" /> Midnight rose
+        </button>
+        <button type="button" className={theme === 'vanilla' ? 'active' : ''} onClick={() => setTheme('vanilla')} aria-pressed={theme === 'vanilla'}>
+          <i className="swatch vanilla-swatch" /> Vanilla
         </button>
       </div>
 
