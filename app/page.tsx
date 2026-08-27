@@ -61,6 +61,7 @@ export default function Home() {
   const [answer, setAnswer] = useState<'yes' | 'no' | 'over' | null>(null);
   const [needText, setNeedText] = useState('');
   const [shareStatus, setShareStatus] = useState('');
+  const [responseStatus, setResponseStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   useEffect(() => {
     const updateProgress = () => {
@@ -103,6 +104,29 @@ export default function Home() {
 
     await navigator.clipboard.writeText(message);
     setShareStatus('Copied. You can send it whenever and however you choose.');
+  };
+
+  const chooseAnswer = (choice: 'yes' | 'no' | 'over') => {
+    setAnswer(choice);
+    setResponseStatus('idle');
+  };
+
+  const sendAnswer = async () => {
+    if (!answer || responseStatus === 'sending') return;
+
+    setResponseStatus('sending');
+    try {
+      const response = await fetch('/api/respond', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answer, needs: needText.trim(), website: '' }),
+      });
+
+      if (!response.ok) throw new Error('The response could not be sent.');
+      setResponseStatus('sent');
+    } catch {
+      setResponseStatus('error');
+    }
   };
 
   return (
@@ -301,19 +325,19 @@ export default function Home() {
 
         {!answer && (
           <div className="answer-zone" aria-label="Would you give us another chance?">
-            <button className="yes-button" type="button" onClick={() => setAnswer('yes')}>
+            <button className="yes-button" type="button" onClick={() => chooseAnswer('yes')}>
               Yes, let’s talk <span>♥</span>
             </button>
             <button
               className="no-button"
               type="button"
               onPointerEnter={(event) => dodgeNo(event.pointerType)}
-              onClick={() => setAnswer('no')}
+              onClick={() => chooseAnswer('no')}
               style={{ transform: `translate(${noPosition.x}px, ${noPosition.y}px)` }}
             >
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
             </button>
-            <button className="over-button" type="button" onClick={() => setAnswer('over')}>
+            <button className="over-button" type="button" onClick={() => chooseAnswer('over')}>
               I do not want to make this work. I am over us.
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
@@ -342,6 +366,17 @@ export default function Home() {
             <span>♡</span>
             <h3>I hear you.</h3>
             <p>I will respect your answer. Thank you for reading, and I am sorry for the hurt I caused.</p>
+          </div>
+        )}
+
+        {answer && (
+          <div className="response-submit">
+            <button type="button" onClick={sendAnswer} disabled={responseStatus === 'sending' || responseStatus === 'sent'}>
+              {responseStatus === 'sending' ? 'Sending…' : responseStatus === 'sent' ? 'Answer sent' : 'Send my answer'}
+            </button>
+            <small>Nothing is sent automatically. This sends your choice and anything you wrote above.</small>
+            {responseStatus === 'sent' && <p className="response-message success" role="status">Your answer was sent. Thank you for being honest.</p>}
+            {responseStatus === 'error' && <p className="response-message" role="alert">It did not send. You can still share it in your own way.</p>}
           </div>
         )}
 

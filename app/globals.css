@@ -189,6 +189,13 @@ button, a { font: inherit; }
 .answer-card h3 { margin: 14px 0 10px; font: 400 34px Georgia,serif; }
 .answer-card p { color: #948b84; font: 16px/1.6 Georgia,serif; }
 .answer-card.positive { border-color: #72513f; box-shadow: 0 0 80px rgba(137,88,61,.16); }
+.response-submit { width: min(600px,92vw); margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.response-submit button { border: 1px solid var(--paper); border-radius: 999px; background: transparent; color: var(--paper); padding: 13px 21px; cursor: pointer; transition: .25s ease; }
+.response-submit button:hover:not(:disabled) { background: var(--paper); color: #1b1512; transform: translateY(-2px); }
+.response-submit button:disabled { cursor: default; opacity: .68; }
+.response-submit small { color: #716963; font: 11px/1.45 Georgia,serif; }
+.response-message { margin: 2px 0 0; color: #c78d78; font: 12px Georgia,serif; }
+.response-message.success { color: #b9a68e; }
 .closing-section footer { position: absolute; left: 5vw; right: 5vw; bottom: 30px; display: flex; justify-content: center; align-items: center; gap: 16px; color: #5f5954; text-transform: uppercase; letter-spacing: .2em; font-size: 8px; }
 .closing-section footer i { width: 48px; height: 1px; background: #393532; }
 
@@ -233,6 +240,8 @@ button, a { font: inherit; }
 .theme-rose .closing-section h2 em { -webkit-text-stroke-color: #c66d88; }
 .theme-rose .yes-button { border-color: #e9c7ce; background: #e9c7ce; color: #2a1019; }
 .theme-rose .answer-card.positive { border-color: #a94b68; box-shadow: 0 0 90px rgba(172,58,91,.18); }
+.theme-rose .response-submit button { border-color: #e9c7ce; color: #e9c7ce; }
+.theme-rose .response-submit button:hover:not(:disabled) { background: #e9c7ce; color: #2a1019; }
 .theme-rose .needs-card { border-color: #563342; background: rgba(42,16,28,.8); }
 .theme-rose .needs-card textarea { border-color: #684151; background: rgba(15,7,12,.68); }
 .theme-rose .needs-card textarea:focus { border-color: #c56c87; box-shadow: 0 0 0 3px rgba(197,108,135,.13); }
@@ -311,6 +320,8 @@ button, a { font: inherit; }
 .theme-vanilla .needs-actions small { color: #a99584; }
 .theme-vanilla .answer-card { border-color: #5f483b; background: rgba(49,33,26,.88); }
 .theme-vanilla .answer-card.positive { border-color: #b77c4e; box-shadow: 0 0 90px rgba(202,139,84,.16); }
+.theme-vanilla .response-submit button { border-color: #f3dcb3; color: #f3dcb3; }
+.theme-vanilla .response-submit button:hover:not(:disabled) { background: #f3dcb3; color: #38271c; }
 .theme-vanilla .music-player { --ink: #fff4df; --muted: #c7af9a; background: rgba(48,32,25,.96); border-color: rgba(240,205,166,.24); }
 .hero,.ticker,.letter-section,.actions-section,.film-section,.meme-section,.meme-stage,.closing-section,.topbar { transition: background .55s ease,border-color .55s ease,color .55s ease; }
 
