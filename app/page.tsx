@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const promises = [
   {
@@ -11,7 +11,7 @@ const promises = [
   {
     number: '02',
     title: 'Choose consistency',
-    copy: 'Not one big gesture followed by old habits. Small, honest choices—especially when nobody is watching.',
+    copy: 'Not one big gesture followed by old habits. Small, honest choices, especially when nobody is watching.',
   },
   {
     number: '03',
@@ -32,20 +32,13 @@ const filmFrames = [
   { kicker: 'the us things', title: 'A future I still want to earn', tone: 'frame-night' },
 ];
 
-type AudioScene = {
-  context: AudioContext;
-  oscillators: OscillatorNode[];
-  master: GainNode;
-  timer: ReturnType<typeof setInterval>;
-};
-
 export default function Home() {
   const [soundOn, setSoundOn] = useState(false);
+  const [theme, setTheme] = useState<'espresso' | 'rose'>('espresso');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
   const [answer, setAnswer] = useState<'yes' | 'no' | null>(null);
-  const audioScene = useRef<AudioScene | null>(null);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -56,82 +49,6 @@ export default function Home() {
     window.addEventListener('scroll', updateProgress, { passive: true });
     return () => window.removeEventListener('scroll', updateProgress);
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (audioScene.current) {
-        clearInterval(audioScene.current.timer);
-        audioScene.current.oscillators.forEach((oscillator) => oscillator.stop());
-        void audioScene.current.context.close();
-      }
-    };
-  }, []);
-
-  const stopSound = () => {
-    const scene = audioScene.current;
-    if (!scene) return;
-    clearInterval(scene.timer);
-    scene.master.gain.exponentialRampToValueAtTime(0.0001, scene.context.currentTime + 0.45);
-    window.setTimeout(() => {
-      scene.oscillators.forEach((oscillator) => oscillator.stop());
-      void scene.context.close();
-    }, 500);
-    audioScene.current = null;
-    setSoundOn(false);
-  };
-
-  const startSound = () => {
-    const BrowserAudioContext = window.AudioContext ||
-      (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const context = new BrowserAudioContext();
-    const master = context.createGain();
-    const filter = context.createBiquadFilter();
-    master.gain.setValueAtTime(0.0001, context.currentTime);
-    master.gain.exponentialRampToValueAtTime(0.075, context.currentTime + 1.8);
-    filter.type = 'lowpass';
-    filter.frequency.value = 720;
-    filter.Q.value = 0.7;
-    master.connect(filter);
-    filter.connect(context.destination);
-
-    const progressions = [
-      [110, 164.81, 220],
-      [98, 146.83, 196],
-      [130.81, 196, 261.63],
-      [87.31, 130.81, 174.61],
-    ];
-    const oscillators = progressions[0].map((frequency, index) => {
-      const oscillator = context.createOscillator();
-      const voice = context.createGain();
-      oscillator.type = index === 0 ? 'sine' : 'triangle';
-      oscillator.frequency.value = frequency;
-      oscillator.detune.value = index === 1 ? -7 : index === 2 ? 5 : 0;
-      voice.gain.value = index === 0 ? 0.7 : 0.14;
-      oscillator.connect(voice);
-      voice.connect(master);
-      oscillator.start();
-      return oscillator;
-    });
-
-    let chord = 0;
-    const timer = setInterval(() => {
-      chord = (chord + 1) % progressions.length;
-      oscillators.forEach((oscillator, index) => {
-        oscillator.frequency.exponentialRampToValueAtTime(
-          progressions[chord][index],
-          context.currentTime + 3.5,
-        );
-      });
-    }, 7000);
-
-    audioScene.current = { context, oscillators, master, timer };
-    setSoundOn(true);
-  };
-
-  const toggleSound = () => {
-    if (soundOn) stopSound();
-    else startSound();
-  };
 
   const dodgeNo = (pointerType: string) => {
     if (pointerType !== 'mouse' || dodgeCount >= 3) return;
@@ -145,7 +62,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className={`site-shell theme-${theme}`}>
       <div className="grain" aria-hidden="true" />
       <div className="scroll-line" aria-hidden="true">
         <span style={{ transform: `scaleX(${scrollProgress})` }} />
@@ -153,13 +70,39 @@ export default function Home() {
 
       <nav className="topbar" aria-label="Page controls">
         <a className="monogram" href="#top" aria-label="Back to the beginning">M / Y</a>
-        <span className="now-playing"><i className={soundOn ? 'is-playing' : ''} /> Original midnight loop</span>
-        <button className="sound-button" type="button" onClick={toggleSound} aria-pressed={soundOn}>
+        <span className="now-playing"><i className={soundOn ? 'is-playing' : ''} /> Redemption by Drake</span>
+        <button className="sound-button" type="button" onClick={() => setSoundOn((open) => !open)} aria-expanded={soundOn}>
           <span className="equalizer" aria-hidden="true"><i /><i /><i /></span>
-          <span>Sound</span>
-          <b>{soundOn ? 'on' : 'off'}</b>
+          <span>Music</span>
+          <b>{soundOn ? 'open' : 'closed'}</b>
         </button>
       </nav>
+
+      <div className="palette-control" aria-label="Choose a color version">
+        <span>Color study</span>
+        <button type="button" className={theme === 'espresso' ? 'active' : ''} onClick={() => setTheme('espresso')} aria-pressed={theme === 'espresso'}>
+          <i className="swatch espresso-swatch" /> Espresso
+        </button>
+        <button type="button" className={theme === 'rose' ? 'active' : ''} onClick={() => setTheme('rose')} aria-pressed={theme === 'rose'}>
+          <i className="swatch rose-swatch" /> Midnight rose
+        </button>
+      </div>
+
+      <aside className={`music-player ${soundOn ? 'open' : ''}`} aria-hidden={!soundOn}>
+        <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
+        <span>Our song</span>
+        <h2>Redemption</h2>
+        <p>Drake · Views</p>
+        <iframe
+          title="Redemption by Drake on Spotify"
+          src="https://open.spotify.com/embed/track/4cRBqWBjuccCowYVHFlXK6?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        />
+        <small>Press play once and it will stay with you while you read.</small>
+      </aside>
 
       <header id="top" className="hero">
         <div className="ambient ambient-one" aria-hidden="true" />
@@ -170,7 +113,7 @@ export default function Home() {
           <span>than flowers.</span>
         </h1>
         <p className="hero-copy reveal-three">
-          So I made you a small corner of the internet—one where I can own what I did,
+          So I made you a small corner of the internet, a place where I can own what I did,
           tell you what I am changing, and ask for the chance to show you better.
         </p>
         <a className="begin reveal-three" href="#letter">
@@ -195,16 +138,18 @@ export default function Home() {
         <div className="letter-grid">
           <div className="letter-lead">
             <p>What I should have said sooner</p>
-            <h2>I am sorry for the hurt my actions caused you.</h2>
+            <h2>I am sorry, Cyd. I cheated, and I hid the truth from you.</h2>
           </div>
           <div className="letter-body">
             <p className="dropcap">
-              Whatever I meant to do does not erase what you felt. I know that intention is not
-              the same thing as impact, and “I didn’t mean to” cannot be where accountability ends.
+              I cheated at the beginning of our relationship. You found out six months later,
+              which means the hurt did not only come from what I did. It also came from realizing
+              I let you keep building with me without knowing the full truth.
             </p>
             <p>
-              You deserved patience, honesty, and care from me. Where I fell short, I hurt someone
-              I love. I am not here to talk you out of your feelings. I am here to own my part in them.
+              You deserved honesty from the beginning. I was wrong, and I understand why this changed
+              the way you see me and what we built. I am not here to talk you out of your feelings.
+              I am here to own what I did and the trust it damaged.
             </p>
             <blockquote>“This is not an argument.<br />It is not an excuse.<br /><em>It is an apology.</em>”</blockquote>
           </div>
@@ -220,7 +165,7 @@ export default function Home() {
           <h2>Sorry is a sentence.<br /><em>Change is the proof.</em></h2>
           <p>
             A website is still just a gesture. What matters is who I choose to be after you close it.
-            These are the actions I want to practice—not perform.
+            These are the actions I want to practice, not perform.
           </p>
         </div>
         <div className="promise-grid">
@@ -261,7 +206,7 @@ export default function Home() {
           <h2>Your honor,<br /><em>I miss my girl.</em></h2>
           <p>
             Me, formally presenting my case to the court of us with absolutely no legal training,
-            one emotional-support suit, and a suspicious amount of hope.
+            one emotional support suit, and a suspicious amount of hope.
           </p>
           <div className="meme-caption">COME HOME? <span>(respectfully. very respectfully.)</span></div>
         </div>
@@ -283,10 +228,12 @@ export default function Home() {
         <div className="closing-halo" aria-hidden="true"><i /><i /><i /></div>
         <div className="section-tag centered"><span>05</span> one honest question</div>
         <p className="closing-pre">No pressure. No pretending. Just hope.</p>
-        <h2>I want us to feel<br />like <em>us</em> again.</h2>
+        <h2>I want you back, Cyd.<br />Let me <em>show</em> you.</h2>
         <p className="closing-copy">
-          I am not asking you to forget. I am asking for the chance to show you that I can learn,
-          repair, and love you with more care than I did before.
+          I know my choices gave you a reason to question what we built. I will not call cheating
+          a dumb mistake or ask you to carry the responsibility of saving us. If you are willing,
+          give me the chance to show you through consistent actions that I can be honest, accountable,
+          and safe for you. I want to earn back what I damaged, not talk you into forgetting it.
         </p>
 
         {!answer && (
@@ -304,7 +251,7 @@ export default function Home() {
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
-            {dodgeCount >= 3 && <span className="dodge-note">Joke over—your choice is yours.</span>}
+            {dodgeCount >= 3 && <span className="dodge-note">Joke over. Your choice is yours.</span>}
           </div>
         )}
 
@@ -312,7 +259,7 @@ export default function Home() {
           <div className="answer-card positive" role="status">
             <span>♥</span>
             <h3>Then let me show you better.</h3>
-            <p>No speeches. No shortcuts. Just the next honest conversation—and the actions after it.</p>
+            <p>No speeches. No shortcuts. Just the next honest conversation and the actions after it.</p>
           </div>
         )}
 
