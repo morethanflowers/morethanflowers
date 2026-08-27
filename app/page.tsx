@@ -281,7 +281,7 @@ export default function Home() {
 
         <div className="needs-card">
           <span>Your voice belongs here too</span>
-          <h3>What would you need from me for this to have a real chance?</h3>
+          <h3>If you see a path forward, what would you need from me?</h3>
           <textarea
             value={needText}
             onChange={(event) => {
