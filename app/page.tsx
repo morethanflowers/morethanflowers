@@ -30,13 +30,13 @@ const promises = [
   },
   {
     number: '06',
-    title: 'Protect what we rebuild',
-    copy: 'Trust should feel safe in my hands. I want my actions to make that true again, one day at a time.',
+    title: 'Protect anything we may rebuild',
+    copy: 'The last time we talked, you said you did not feel safe with me. I heard you. If you ever choose to try again, I know safety must be earned through my honesty, consistency, and respect.',
   },
   {
     number: '07',
-    title: 'Let us rebuild slowly',
-    copy: 'Remember when I said I was in no rush because we had the rest of our lives to figure things out? I still mean that. Repair should be patient, steady, and real.',
+    title: 'If we rebuild, let it be slowly',
+    copy: 'Remember when I used to say I was in no rush because we had the rest of our lives to figure things out? I still mean that. If you choose us again, there is no deadline and no rushing you.',
   },
   {
     number: '08',
