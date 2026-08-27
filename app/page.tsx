@@ -123,7 +123,7 @@ export default function Home() {
       </nav>
 
       <div className="palette-control" aria-label="Choose a color version">
-        <span>Color study</span>
+        <span>Themes I thought you would love</span>
         <button type="button" className={theme === 'espresso' ? 'active' : ''} onClick={() => setTheme('espresso')} aria-pressed={theme === 'espresso'}>
           <i className="swatch espresso-swatch" /> Espresso
         </button>
