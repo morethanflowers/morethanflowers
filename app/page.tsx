@@ -52,7 +52,11 @@ const filmFrames = [
   { kicker: 'the us things', title: 'A future I still want to earn', tone: 'frame-night' },
 ];
 
-const musicTracks = ['/song-for-site-intro.mp3', '/song-for-site.mp3'];
+const musicTracks = ['song-for-site-intro.mp3', 'song-for-site.mp3'];
+const responseEndpoint =
+  typeof window !== 'undefined' && window.location.hostname === 'morethanflowers.github.io'
+    ? 'https://more-than-flowers.ogundejiadeola0.chatgpt.site/api/respond'
+    : '/api/respond';
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -145,7 +149,7 @@ export default function Home() {
 
     setResponseStatus('sending');
     try {
-      const response = await fetch('/api/respond', {
+      const response = await fetch(responseEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answer, needs: needText.trim(), website: '' }),
@@ -301,7 +305,7 @@ export default function Home() {
           <p className="meme-kicker">A brief meme intermission</p>
           <div className="meme-title-row">
             <h2>Your honor,<br /><em>I miss her.</em></h2>
-            <img className="meme-title-character" src="/your-honor-3d.png" alt="A small 3D lawyer character making the appeal" />
+            <img className="meme-title-character" src="your-honor-3d.png" alt="A small 3D lawyer character making the appeal" />
           </div>
           <p>
             Me, formally presenting my case to the court of us with absolutely no legal training,

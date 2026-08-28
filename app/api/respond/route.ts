@@ -4,6 +4,21 @@ const answerLabels = {
   over: 'I do not want this to work. I am over you.',
 } as const;
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'https://morethanflowers.github.io',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  Vary: 'Origin',
+};
+
+function json(body: unknown, status = 200) {
+  return Response.json(body, { status, headers: corsHeaders });
+}
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: corsHeaders });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json() as {
@@ -12,17 +27,17 @@ export async function POST(request: Request) {
       website?: string;
     };
 
-    if (body.website) return Response.json({ ok: true });
+    if (body.website) return json({ ok: true });
     if (!body.answer || !(body.answer in answerLabels)) {
-      return Response.json({ error: 'Choose an answer first.' }, { status: 400 });
+      return json({ error: 'Choose an answer first.' }, 400);
     }
     if (body.needs && body.needs.length > 5000) {
-      return Response.json({ error: 'The written response is too long.' }, { status: 400 });
+      return json({ error: 'The written response is too long.' }, 400);
     }
 
     const recipient = process.env.RESPONSE_EMAIL;
     if (!recipient) {
-      return Response.json({ error: 'Email delivery is not configured.' }, { status: 503 });
+      return json({ error: 'Email delivery is not configured.' }, 503);
     }
 
     const delivery = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`, {
@@ -41,11 +56,11 @@ export async function POST(request: Request) {
 
     const result = await delivery.json().catch(() => null) as { success?: boolean | string } | null;
     if (!delivery.ok || (result?.success !== true && result?.success !== 'true')) {
-      return Response.json({ error: 'Email delivery failed.' }, { status: 502 });
+      return json({ error: 'Email delivery failed.' }, 502);
     }
 
-    return Response.json({ ok: true });
+    return json({ ok: true });
   } catch {
-    return Response.json({ error: 'Invalid response.' }, { status: 400 });
+    return json({ error: 'Invalid response.' }, 400);
   }
 }
