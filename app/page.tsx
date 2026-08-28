@@ -52,8 +52,11 @@ const filmFrames = [
   { kicker: 'the us things', title: 'A future I still want to earn', tone: 'frame-night' },
 ];
 
+const musicTracks = ['/song-for-site-intro.mp3', '/song-for-site.mp3'];
+
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [currentTrack, setCurrentTrack] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [theme, setTheme] = useState<'espresso' | 'rose' | 'vanilla'>('vanilla');
@@ -97,7 +100,7 @@ export default function Home() {
     window.addEventListener('keydown', startPlayback);
 
     return removeUnlockListeners;
-  }, []);
+  }, [currentTrack]);
 
   const dodgeNo = (pointerType: string) => {
     if (pointerType !== 'mouse' || dodgeCount >= 3) return;
@@ -194,10 +197,16 @@ export default function Home() {
           autoPlay
           playsInline
           preload="auto"
-          src="/song-for-site.mp3"
+          src={musicTracks[currentTrack]}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
+          onEnded={() => {
+            if (currentTrack < musicTracks.length - 1) {
+              setCurrentTrack((track) => track + 1);
+            } else {
+              setIsPlaying(false);
+            }
+          }}
         >
           Your browser does not support the audio player.
         </audio>
