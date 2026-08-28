@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const promises = [
   {
@@ -53,6 +53,7 @@ const filmFrames = [
 ];
 
 export default function Home() {
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [soundOn, setSoundOn] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [theme, setTheme] = useState<'espresso' | 'rose' | 'vanilla'>('vanilla');
@@ -72,6 +73,30 @@ export default function Home() {
     updateProgress();
     window.addEventListener('scroll', updateProgress, { passive: true });
     return () => window.removeEventListener('scroll', updateProgress);
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    function removeUnlockListeners() {
+      window.removeEventListener('pointerdown', startPlayback);
+      window.removeEventListener('touchstart', startPlayback);
+      window.removeEventListener('keydown', startPlayback);
+    }
+
+    function startPlayback() {
+      audio?.play().then(removeUnlockListeners).catch(() => {
+        // Browsers may wait for the visitor's first interaction before allowing sound.
+      });
+    }
+
+    startPlayback();
+    window.addEventListener('pointerdown', startPlayback);
+    window.addEventListener('touchstart', startPlayback, { passive: true });
+    window.addEventListener('keydown', startPlayback);
+
+    return removeUnlockListeners;
   }, []);
 
   const dodgeNo = (pointerType: string) => {
@@ -164,8 +189,11 @@ export default function Home() {
         <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
         <h2>Background music</h2>
         <audio
+          ref={audioRef}
           controls
-          preload="metadata"
+          autoPlay
+          playsInline
+          preload="auto"
           src="/song-for-site.mp3"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
@@ -173,7 +201,7 @@ export default function Home() {
         >
           Your browser does not support the audio player.
         </audio>
-        <small>Press play once, then keep reading while the song stays with you.</small>
+        <small>If your browser blocks sound on arrival, the music will begin with your first tap anywhere on the page.</small>
       </aside>
 
       <header id="top" className="hero">
