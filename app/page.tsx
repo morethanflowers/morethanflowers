@@ -264,8 +264,9 @@ export default function Home() {
           <div className="section-tag light"><span>02</span> what happens next</div>
           <h2>Sorry is a sentence.<br /><em>Change is the proof.</em></h2>
           <p>
-            Just like the flowers, this page is only a gesture. It cannot rebuild trust by itself.
-            The proof begins after you close it, through the actions I practice, not perform.
+            “Sorry” is only a word. Change is the action that proves I truly mean what I say.
+            This page and the flowers are gestures; the actions below are what I will do consistently
+            to show you that I mean it.
           </p>
         </div>
         <div className="promise-grid">
