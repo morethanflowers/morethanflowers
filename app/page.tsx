@@ -57,6 +57,7 @@ const responseEndpoint =
   typeof window !== 'undefined' && window.location.hostname === 'morethanflowers.github.io'
     ? 'https://more-than-flowers.ogundejiadeola0.chatgpt.site/api/respond'
     : '/api/respond';
+type Answer = 'yes' | 'no' | 'over';
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -67,9 +68,9 @@ export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
   const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
-  const [answer, setAnswer] = useState<'yes' | 'no' | 'over' | null>(null);
+  const [answer, setAnswer] = useState<Answer | null>(null);
   const [needText, setNeedText] = useState('');
-  const [shareStatus, setShareStatus] = useState('');
+  const [needsStatus, setNeedsStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [responseStatus, setResponseStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   useEffect(() => {
@@ -117,45 +118,37 @@ export default function Home() {
     setDodgeCount((count) => count + 1);
   };
 
+  const postResponse = async (payload: { answer?: Answer; needs?: string }) => {
+    const response = await fetch(responseEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, website: '' }),
+    });
+
+    if (!response.ok) throw new Error('The response could not be sent.');
+  };
+
   const shareNeeds = async () => {
-    const response = needText.trim();
-    if (!response) {
-      setShareStatus('Write what you need first.');
+    const needs = needText.trim();
+    if (!needs) {
+      setNeedsStatus('error');
       return;
     }
 
-    const message = `What I need from you:\n\n${response}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'What I need from you', text: message });
-        setShareStatus('Shared only where you chose.');
-        return;
-      } catch (error) {
-        if ((error as DOMException).name === 'AbortError') return;
-      }
+    setNeedsStatus('sending');
+    try {
+      await postResponse({ needs });
+      setNeedsStatus('sent');
+    } catch {
+      setNeedsStatus('error');
     }
-
-    await navigator.clipboard.writeText(message);
-    setShareStatus('Copied. You can send it whenever and however you choose.');
   };
 
-  const chooseAnswer = (choice: 'yes' | 'no' | 'over') => {
+  const chooseAnswer = async (choice: Answer) => {
     setAnswer(choice);
-    setResponseStatus('idle');
-  };
-
-  const sendAnswer = async () => {
-    if (!answer || responseStatus === 'sending') return;
-
     setResponseStatus('sending');
     try {
-      const response = await fetch(responseEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answer, needs: needText.trim(), website: '' }),
-      });
-
-      if (!response.ok) throw new Error('The response could not be sent.');
+      await postResponse({ answer: choice, needs: needText.trim() });
       setResponseStatus('sent');
     } catch {
       setResponseStatus('error');
@@ -352,34 +345,37 @@ export default function Home() {
             value={needText}
             onChange={(event) => {
               setNeedText(event.target.value);
-              setShareStatus('');
+              setNeedsStatus('idle');
             }}
             placeholder="Say it plainly. Boundaries, questions, time, actions, or anything else."
             rows={5}
             aria-label="What you need from me"
           />
           <div className="needs-actions">
-            <button type="button" onClick={shareNeeds}>Share this in my own way</button>
-            <small>Nothing leaves this page until you choose where to send it.</small>
+            <button type="button" onClick={() => void shareNeeds()} disabled={needsStatus === 'sending' || needsStatus === 'sent'}>
+              {needsStatus === 'sending' ? 'Sending…' : needsStatus === 'sent' ? 'Sent privately' : 'Send this privately'}
+            </button>
+            <small>This sends your words directly to my email.</small>
           </div>
-          {shareStatus && <p className="share-status" role="status">{shareStatus}</p>}
+          {needsStatus === 'sent' && <p className="share-status" role="status">Your words were sent. Thank you for telling me what you need.</p>}
+          {needsStatus === 'error' && <p className="share-status" role="alert">Write what you need, then try sending it again.</p>}
         </div>
 
         {!answer && (
           <div className="answer-zone" aria-label="Would you give us another chance?">
-            <button className="yes-button" type="button" onClick={() => chooseAnswer('yes')}>
+            <button className="yes-button" type="button" onClick={() => void chooseAnswer('yes')}>
               Yes, let’s talk <span>♥</span>
             </button>
             <button
               className="no-button"
               type="button"
               onPointerEnter={(event) => dodgeNo(event.pointerType)}
-              onClick={() => chooseAnswer('no')}
+              onClick={() => void chooseAnswer('no')}
               style={{ transform: `translate(${noPosition.x}px, ${noPosition.y}px)` }}
             >
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
             </button>
-            <button className="over-button" type="button" onClick={() => chooseAnswer('over')}>
+            <button className="over-button" type="button" onClick={() => void chooseAnswer('over')}>
               I do not want this to work. I am over you.
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
@@ -409,14 +405,18 @@ export default function Home() {
           </div>
         )}
 
-        {answer && (
+        {answer && answer !== 'over' && responseStatus === 'sending' && (
+          <p className="response-message" role="status">Sending your answer privately…</p>
+        )}
+
+        {answer && answer !== 'over' && responseStatus === 'sent' && (
+          <p className="response-message success" role="status">Your answer was sent privately. Thank you for being honest.</p>
+        )}
+
+        {answer && answer !== 'over' && responseStatus === 'error' && (
           <div className="response-submit">
-            <button type="button" onClick={sendAnswer} disabled={responseStatus === 'sending' || responseStatus === 'sent'}>
-              {responseStatus === 'sending' ? 'Sending…' : responseStatus === 'sent' ? 'Answer sent' : 'Send my answer'}
-            </button>
-            <small>Nothing is sent automatically. This sends your choice and anything you wrote above.</small>
-            {responseStatus === 'sent' && <p className="response-message success" role="status">Your answer was sent. Thank you for being honest.</p>}
-            {responseStatus === 'error' && <p className="response-message" role="alert">It did not send. You can still share it in your own way.</p>}
+            <button type="button" onClick={() => void chooseAnswer(answer)}>Try sending again</button>
+            <p className="response-message" role="alert">It did not send. Please try once more.</p>
           </div>
         )}
 

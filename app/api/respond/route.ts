@@ -28,10 +28,16 @@ export async function POST(request: Request) {
     };
 
     if (body.website) return json({ ok: true });
-    if (!body.answer || !(body.answer in answerLabels)) {
+    const needs = body.needs?.trim() || '';
+    const hasValidAnswer = Boolean(body.answer && body.answer in answerLabels);
+
+    if (body.answer && !hasValidAnswer) {
       return json({ error: 'Choose an answer first.' }, 400);
     }
-    if (body.needs && body.needs.length > 5000) {
+    if (!hasValidAnswer && !needs) {
+      return json({ error: 'Share an answer or write what you need first.' }, 400);
+    }
+    if (needs.length > 5000) {
       return json({ error: 'The written response is too long.' }, 400);
     }
 
@@ -45,11 +51,14 @@ export async function POST(request: Request) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Origin: 'https://morethanflowers.github.io',
+        Referer: 'https://morethanflowers.github.io/morethanflowers/',
       },
       body: JSON.stringify({
         _subject: 'A response from More Than Flowers',
-        Answer: answerLabels[body.answer],
-        'What she needs': body.needs?.trim() || 'No written response',
+        _url: 'https://morethanflowers.github.io/morethanflowers/',
+        Answer: hasValidAnswer ? answerLabels[body.answer as keyof typeof answerLabels] : 'No answer selected',
+        'What she needs': needs || 'No written response',
         'Submitted at': new Date().toISOString(),
       }),
     });
