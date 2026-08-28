@@ -58,6 +58,11 @@ const responseEndpoint =
     ? 'https://more-than-flowers.ogundejiadeola0.chatgpt.site/api/respond'
     : '/api/respond';
 type Answer = 'yes' | 'no' | 'over';
+const answerEmailLabels: Record<Answer, string> = {
+  yes: 'Yes, let us talk',
+  no: 'Not yet',
+  over: 'I do not want this to work. I am over you.',
+};
 
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -119,10 +124,19 @@ export default function Home() {
   };
 
   const postResponse = async (payload: { answer?: Answer; needs?: string }) => {
+    const needs = payload.needs?.trim() || '';
     const response = await fetch(responseEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, website: '' }),
+        body: JSON.stringify({
+          ...payload,
+          website: '',
+          _subject: 'A response from More Than Flowers',
+          _url: 'https://morethanflowers.github.io/morethanflowers/',
+          Answer: payload.answer ? answerEmailLabels[payload.answer] : 'No answer selected',
+          'What she needs': needs || 'No written response',
+          'Submitted at': new Date().toISOString(),
+        }),
     });
 
     if (!response.ok) throw new Error('The response could not be sent.');
@@ -355,10 +369,13 @@ export default function Home() {
             <button type="button" onClick={() => void shareNeeds()} disabled={needsStatus === 'sending' || needsStatus === 'sent'}>
               {needsStatus === 'sending' ? 'Sending…' : needsStatus === 'sent' ? 'Sent privately' : 'Send this privately'}
             </button>
-            <small>This sends your words directly to my email.</small>
           </div>
           {needsStatus === 'sent' && <p className="share-status" role="status">Your words were sent. Thank you for telling me what you need.</p>}
-          {needsStatus === 'error' && <p className="share-status" role="alert">Write what you need, then try sending it again.</p>}
+          {needsStatus === 'error' && (
+            <p className="share-status" role="alert">
+              {needText.trim() ? 'It did not send. Please try once more.' : 'Write what you need first.'}
+            </p>
+          )}
         </div>
 
         {!answer && (

@@ -46,29 +46,13 @@ export async function POST(request: Request) {
       return json({ error: 'Email delivery is not configured.' }, 503);
     }
 
-    const delivery = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`, {
-      method: 'POST',
+    return new Response(null, {
+      status: 307,
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Origin: 'https://morethanflowers.github.io',
-        Referer: 'https://morethanflowers.github.io/morethanflowers/',
+        ...corsHeaders,
+        Location: `https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`,
       },
-      body: JSON.stringify({
-        _subject: 'A response from More Than Flowers',
-        _url: 'https://morethanflowers.github.io/morethanflowers/',
-        Answer: hasValidAnswer ? answerLabels[body.answer as keyof typeof answerLabels] : 'No answer selected',
-        'What she needs': needs || 'No written response',
-        'Submitted at': new Date().toISOString(),
-      }),
     });
-
-    const result = await delivery.json().catch(() => null) as { success?: boolean | string } | null;
-    if (!delivery.ok || (result?.success !== true && result?.success !== 'true')) {
-      return json({ error: 'Email delivery failed.' }, 502);
-    }
-
-    return json({ ok: true });
   } catch {
     return json({ error: 'Invalid response.' }, 400);
   }
