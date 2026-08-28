@@ -131,14 +131,26 @@ button, a { font: inherit; }
 .meme-kicker { margin: 65px 0 16px; color: #795d4d; text-transform: uppercase; letter-spacing: .21em; font-size: 9px; }
 .meme-copy h2 { margin: 0; font: 400 clamp(52px,6vw,92px)/.95 Georgia,serif; letter-spacing: -.05em; }
 .meme-copy h2 em { color: #79513e; }
+.meme-title-row { display: flex; align-items: flex-end; gap: clamp(12px,2vw,24px); }
+.meme-title-row h2 { flex: 1; min-width: 0; font-size: clamp(44px,4.6vw,74px); }
+.meme-title-character { flex: none; width: auto; height: clamp(105px,12vw,150px); object-fit: contain; filter: drop-shadow(0 14px 16px rgba(49,30,21,.24)); }
 .meme-copy > p:not(.meme-kicker) { width: min(520px,100%); margin: 36px 0; color: #675e57; font: 17px/1.7 Georgia,serif; }
 .meme-copy > p.idea-joke { margin-top: 0; padding-left: 20px; border-left: 1px solid #9e8f81; color: #795d52; font-size: 14px; }
 .meme-caption { width: fit-content; border: 1px solid #9e8f81; padding: 13px 17px; font-size: 10px; letter-spacing: .15em; }
 .meme-caption span { color: #766a61; }
 .meme-stage { position: relative; min-height: 680px; overflow: hidden; background: radial-gradient(circle at 50% 40%,#5c4234,#201512 55%,#0b0908); }
 .spotlight { position: absolute; width: 75%; height: 110%; left: 12%; top: -30%; background: rgba(245,225,206,.1); clip-path: polygon(43% 0,57% 0,100% 100%,0 100%); filter: blur(10px); }
-.meme-character { position: absolute; z-index: 1; width: min(82%,560px); height: 92%; left: 50%; bottom: 0; transform: translateX(-50%); object-fit: contain; object-position: center bottom; filter: drop-shadow(0 34px 25px rgba(0,0,0,.48)); }
-.stage-note { position: absolute; z-index: 2; bottom: 28px; left: 50%; transform: translateX(-50%); color: #887c74; text-transform: uppercase; letter-spacing: .25em; font-size: 8px; white-space: nowrap; }
+.suit-figure { position: absolute; width: 170px; height: 400px; left: 50%; bottom: 60px; transform: translateX(-50%); filter: drop-shadow(0 30px 22px rgba(0,0,0,.45)); }
+.suit-figure i { position: absolute; display: block; }
+.head { width: 66px; height: 78px; left: 52px; top: 0; border-radius: 48% 48% 43% 43%; background: #1a100c; box-shadow: inset 9px 0 0 #3b251c; }
+.body { width: 145px; height: 270px; left: 12px; top: 69px; background: linear-gradient(90deg,#171719,#37363a 49%,#171719); clip-path: polygon(20% 0,80% 0,100% 100%,0 100%); }
+.lapel { width: 58px; height: 145px; top: 74px; background: #49484b; }
+.left-lapel { left: 31px; clip-path: polygon(0 0,100% 35%,68% 100%); }
+.right-lapel { right: 31px; clip-path: polygon(100% 0,0 35%,32% 100%); }
+.arm { top: 103px; width: 220px; height: 48px; background: linear-gradient(#363538,#171719); border-radius: 30px; transform-origin: center; }
+.left-arm { right: 115px; transform: rotate(-15deg); }
+.right-arm { left: 115px; transform: rotate(15deg); }
+.stage-note { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: #887c74; text-transform: uppercase; letter-spacing: .25em; font-size: 8px; white-space: nowrap; }
 
 .closing-section { position: relative; min-height: 115vh; overflow: hidden; background: #090909; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 140px 24px 110px; }
 .closing-section > *:not(.closing-halo) { position: relative; z-index: 2; }
@@ -345,7 +357,8 @@ button, a { font: inherit; }
   .film-track { animation-duration: 28s; }
   .meme-copy { padding-block: 95px; }
   .meme-stage { min-height: 520px; }
-  .meme-character { width: min(90%,460px); height: 94%; }
+  .meme-title-character { height: 110px; }
+  .suit-figure { transform: translateX(-50%) scale(.82); transform-origin: bottom; bottom: 35px; }
   .closing-halo i { width: 115vw; }
   .closing-halo i:nth-child(2) { width: 82vw; }
   .closing-halo i:nth-child(3) { width: 55vw; }

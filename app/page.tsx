@@ -262,7 +262,10 @@ export default function Home() {
         <div className="meme-copy">
           <div className="section-tag light"><span>04</span> very serious business</div>
           <p className="meme-kicker">A brief meme intermission</p>
-          <h2>Your honor,<br /><em>I miss her.</em></h2>
+          <div className="meme-title-row">
+            <h2>Your honor,<br /><em>I miss her.</em></h2>
+            <img className="meme-title-character" src="/your-honor-3d.png" alt="A small 3D lawyer character making the appeal" />
+          </div>
           <p>
             Me, formally presenting my case to the court of us with absolutely no legal training,
             one emotional support suit, and a suspicious amount of hope.
@@ -272,11 +275,18 @@ export default function Home() {
             are skywriting, a twelve slide presentation, or doing the real work consistently.
             The last one has the best reviews.
           </p>
-          <div className="meme-caption">CAN WE TALK? <span>(respectfully. very respectfully.)</span></div>
+          <div className="meme-caption">COME HOME? <span>(respectfully. very respectfully.)</span></div>
         </div>
-        <div className="meme-stage">
+        <div className="meme-stage" aria-label="A playful suited figure making a dramatic appeal">
           <div className="spotlight" aria-hidden="true" />
-          <img className="meme-character" src="/your-honor-3d.png" alt="A playful 3D suited character making a dramatic appeal" />
+          <div className="suit-figure" aria-hidden="true">
+            <i className="head" />
+            <i className="body" />
+            <i className="lapel left-lapel" />
+            <i className="lapel right-lapel" />
+            <i className="arm left-arm" />
+            <i className="arm right-arm" />
+          </div>
           <span className="stage-note">dramatic recreation</span>
         </div>
       </section>
