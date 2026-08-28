@@ -209,7 +209,7 @@ export default function Home() {
         <div className="ambient ambient-two" aria-hidden="true" />
         <p className="eyebrow reveal-one">An honest letter, in motion</p>
         <h1 className="reveal-two">
-          I owe you more
+          You deserve more
           <span>than flowers.</span>
         </h1>
         <p className="hero-copy reveal-three">
