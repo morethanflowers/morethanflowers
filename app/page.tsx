@@ -353,9 +353,7 @@ export default function Home() {
 
         {answer === 'over' && (
           <div className="answer-card" role="status">
-            <span>♡</span>
             <h3>I hear you.</h3>
-            <p>I will respect your answer. Thank you for reading, and I am sorry for the hurt I caused.</p>
           </div>
         )}
 
