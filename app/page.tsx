@@ -30,8 +30,8 @@ const promises = [
   },
   {
     number: '06',
-    title: 'Protect anything we may rebuild',
-    copy: 'The last time we talked, you said you did not feel safe with me. I heard you. If you ever choose to try again, I know safety must be earned through my honesty, consistency, and respect.',
+    title: 'Respect whatever you choose',
+    copy: 'The last time we talked, you said you did not feel safe with me. I heard you. I am not assuming there will be another chance. Whatever you choose, I owe you honesty, consistency, and respect—with no pressure from me.',
   },
   {
     number: '07',
@@ -139,7 +139,7 @@ export default function Home() {
 
       <nav className="topbar" aria-label="Page controls">
         <a className="monogram" href="#top" aria-label="Back to the beginning">M / Y</a>
-        <span className="now-playing"><i className={isPlaying ? 'is-playing' : ''} /> Original song · made for this page</span>
+        <span className="now-playing"><i className={isPlaying ? 'is-playing' : ''} /> Background music</span>
         <button className="sound-button" type="button" onClick={() => setSoundOn((open) => !open)} aria-expanded={soundOn}>
           <span className={`equalizer ${isPlaying ? 'is-playing' : ''}`} aria-hidden="true"><i /><i /><i /></span>
           <span>Music</span>
@@ -162,9 +162,7 @@ export default function Home() {
 
       <aside className={`music-player ${soundOn ? 'open' : ''}`} aria-hidden={!soundOn}>
         <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
-        <span>Background music</span>
-        <h2>An original song</h2>
-        <p>Made by me · for this page</p>
+        <h2>Background music</h2>
         <audio
           controls
           preload="metadata"
@@ -264,7 +262,7 @@ export default function Home() {
         <div className="meme-copy">
           <div className="section-tag light"><span>04</span> very serious business</div>
           <p className="meme-kicker">A brief meme intermission</p>
-          <h2>Your honor,<br /><em>I miss my girl.</em></h2>
+          <h2>Your honor,<br /><em>I miss her.</em></h2>
           <p>
             Me, formally presenting my case to the court of us with absolutely no legal training,
             one emotional support suit, and a suspicious amount of hope.
@@ -274,18 +272,11 @@ export default function Home() {
             are skywriting, a twelve slide presentation, or doing the real work consistently.
             The last one has the best reviews.
           </p>
-          <div className="meme-caption">COME HOME? <span>(respectfully. very respectfully.)</span></div>
+          <div className="meme-caption">CAN WE TALK? <span>(respectfully. very respectfully.)</span></div>
         </div>
-        <div className="meme-stage" aria-label="A playful suited figure making a dramatic appeal">
+        <div className="meme-stage">
           <div className="spotlight" aria-hidden="true" />
-          <div className="suit-figure" aria-hidden="true">
-            <i className="head" />
-            <i className="body" />
-            <i className="lapel left-lapel" />
-            <i className="lapel right-lapel" />
-            <i className="arm left-arm" />
-            <i className="arm right-arm" />
-          </div>
+          <img className="meme-character" src="/your-honor-3d.png" alt="A playful 3D suited character making a dramatic appeal" />
           <span className="stage-note">dramatic recreation</span>
         </div>
       </section>
@@ -337,7 +328,7 @@ export default function Home() {
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
             </button>
             <button className="over-button" type="button" onClick={() => chooseAnswer('over')}>
-              I do not want to make this work. I am over us.
+              I do not want this to work. I am over you.
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
             {dodgeCount >= 3 && <span className="dodge-note">Joke over. Your choice is yours.</span>}

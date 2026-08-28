@@ -1,7 +1,7 @@
 const answerLabels = {
   yes: 'Yes, let us talk',
   no: 'Not yet',
-  over: 'I do not want to make this work. I am over us.',
+  over: 'I do not want this to work. I am over you.',
 } as const;
 
 export async function POST(request: Request) {
