@@ -31,9 +31,9 @@ button, a { font: inherit; }
 .sound-button b { color: var(--muted); font-weight: 400; }
 .equalizer { width: 11px; height: 10px; display: flex; align-items: end; gap: 2px; }
 .equalizer i { display: block; width: 2px; height: 4px; background: currentColor; }
-.sound-button[aria-expanded='true'] .equalizer i { animation: equalize .75s ease-in-out infinite alternate; }
-.sound-button[aria-expanded='true'] .equalizer i:nth-child(2) { animation-delay: -.45s; }
-.sound-button[aria-expanded='true'] .equalizer i:nth-child(3) { animation-delay: -.2s; }
+.equalizer.is-playing i { animation: equalize .75s ease-in-out infinite alternate; }
+.equalizer.is-playing i:nth-child(2) { animation-delay: -.45s; }
+.equalizer.is-playing i:nth-child(3) { animation-delay: -.2s; }
 @keyframes equalize { to { height: 10px; } }
 
 .palette-control { position: fixed; z-index: 84; top: 91px; left: clamp(18px,3vw,46px); display: flex; align-items: center; gap: 6px; padding: 6px; border: 1px solid rgba(217,201,182,.15); border-radius: 999px; background: rgba(9,9,9,.68); backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0,0,0,.16); }
@@ -50,9 +50,8 @@ button, a { font: inherit; }
 .music-player > span { color: #aa806a; font-size: 8px; letter-spacing: .22em; text-transform: uppercase; }
 .music-player h2 { margin: 9px 0 2px; font: italic 31px Georgia,serif; }
 .music-player p { margin: 0 0 16px; color: var(--muted); font-size: 10px; letter-spacing: .11em; }
-.music-player iframe { display: block; border: 0; border-radius: 12px; }
+.music-player audio { display: block; width: 100%; margin-top: 16px; accent-color: #aa806a; }
 .music-player small { display: block; margin-top: 12px; color: #776f69; font: 11px/1.45 Georgia,serif; }
-.youtube-link { display: inline-block; margin-top: 10px; color: #ad8068; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; text-underline-offset: 4px; }
 .player-close { position: absolute; right: 14px; top: 13px; width: 28px; height: 28px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; font-size: 19px; line-height: 1; }
 
 .hero { min-height: 100svh; position: relative; overflow: hidden; background: radial-gradient(circle at 68% 45%,#3b2b23 0,#17110e 35%,#090909 72%); padding: 18vh clamp(24px,9vw,140px) 10vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }

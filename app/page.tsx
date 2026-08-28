@@ -54,6 +54,7 @@ const filmFrames = [
 
 export default function Home() {
   const [soundOn, setSoundOn] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [theme, setTheme] = useState<'espresso' | 'rose' | 'vanilla'>('vanilla');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [dodgeCount, setDodgeCount] = useState(0);
@@ -138,9 +139,9 @@ export default function Home() {
 
       <nav className="topbar" aria-label="Page controls">
         <a className="monogram" href="#top" aria-label="Back to the beginning">M / Y</a>
-        <span className="now-playing"><i className={soundOn ? 'is-playing' : ''} /> Redemption by Drake</span>
+        <span className="now-playing"><i className={isPlaying ? 'is-playing' : ''} /> Original song · made for this page</span>
         <button className="sound-button" type="button" onClick={() => setSoundOn((open) => !open)} aria-expanded={soundOn}>
-          <span className="equalizer" aria-hidden="true"><i /><i /><i /></span>
+          <span className={`equalizer ${isPlaying ? 'is-playing' : ''}`} aria-hidden="true"><i /><i /><i /></span>
           <span>Music</span>
           <b>{soundOn ? 'open' : 'closed'}</b>
         </button>
@@ -162,21 +163,19 @@ export default function Home() {
       <aside className={`music-player ${soundOn ? 'open' : ''}`} aria-hidden={!soundOn}>
         <button className="player-close" type="button" onClick={() => setSoundOn(false)} aria-label="Close music player">×</button>
         <span>Background music</span>
-        <h2>Redemption</h2>
-        <p>Drake · Views · Official YouTube audio</p>
-        <iframe
-          title="Redemption by Drake on YouTube"
-          src="https://www.youtube-nocookie.com/embed/I0xiIGuRMZc?rel=0&playsinline=1"
-          width="100%"
-          height="202"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          loading="lazy"
-        />
-        <small>Press play once and the full official track will stay open while you read.</small>
-        <a className="youtube-link" href="https://www.youtube.com/watch?v=I0xiIGuRMZc" target="_blank" rel="noreferrer">
-          Open the official track on YouTube
-        </a>
+        <h2>An original song</h2>
+        <p>Made by me · for this page</p>
+        <audio
+          controls
+          preload="metadata"
+          src="/song-for-site.mp3"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+        >
+          Your browser does not support the audio player.
+        </audio>
+        <small>Press play once, then keep reading while the song stays with you.</small>
       </aside>
 
       <header id="top" className="hero">
