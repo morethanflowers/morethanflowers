@@ -1,7 +1,7 @@
 const answerLabels = {
-  yes: 'Yes, let us talk',
+  yes: 'Yes, let us figure this out',
   no: 'Not yet',
-  over: 'I do not want this to work. I am over you.',
+  over: 'I do not think I want to continue this. I am choosing to move on.',
 } as const;
 
 const corsHeaders = {

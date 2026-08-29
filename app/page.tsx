@@ -59,9 +59,9 @@ const responseEndpoint =
     : '/api/respond';
 type Answer = 'yes' | 'no' | 'over';
 const answerEmailLabels: Record<Answer, string> = {
-  yes: 'Yes, let us talk',
+  yes: 'Yes, let us figure this out',
   no: 'Not yet',
-  over: 'I do not want this to work. I am over you.',
+  over: 'I do not think I want to continue this. I am choosing to move on.',
 };
 
 export default function Home() {
@@ -139,7 +139,10 @@ export default function Home() {
         }),
     });
 
-    if (!response.ok) throw new Error('The response could not be sent.');
+    const result = await response.json().catch(() => null) as { success?: boolean | string } | null;
+    if (!response.ok || (result?.success !== true && result?.success !== 'true')) {
+      throw new Error('The response could not be sent.');
+    }
   };
 
   const shareNeeds = async () => {
@@ -381,7 +384,7 @@ export default function Home() {
         {!answer && (
           <div className="answer-zone" aria-label="Would you give us another chance?">
             <button className="yes-button" type="button" onClick={() => void chooseAnswer('yes')}>
-              Yes, let’s talk <span>♥</span>
+                  Yes, let’s figure this out <span>♥</span>
             </button>
             <button
               className="no-button"
@@ -393,7 +396,7 @@ export default function Home() {
               {dodgeCount >= 3 ? 'Okay, you can choose this' : 'Not yet'}
             </button>
             <button className="over-button" type="button" onClick={() => void chooseAnswer('over')}>
-              I do not want this to work. I am over you.
+                  I don’t think I want to continue this. I’m choosing to move on.
             </button>
             {dodgeCount > 0 && dodgeCount < 3 && <span className="dodge-note">I had to try 😅</span>}
             {dodgeCount >= 3 && <span className="dodge-note">Joke over. Your choice is yours.</span>}
