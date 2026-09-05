@@ -79,6 +79,10 @@ export default async function AnalyticsPage() {
 
   const database = getDatabase();
   const retentionCutoff = `(CAST(strftime('%s', 'now') AS INTEGER) * 1000 - 7776000000)`;
+  const configuredStart = Number(process.env.ANALYTICS_STARTED_AT || '0');
+  const trackingStartedAt = Number.isFinite(configuredStart) && configuredStart > 0
+    ? Math.trunc(configuredStart)
+    : 0;
 
   await database.prepare(`DELETE FROM visits WHERE visited_at < ${retentionCutoff}`).run();
 
@@ -95,7 +99,9 @@ export default async function AnalyticsPage() {
         ) AS views_24h
       FROM visits
       WHERE visited_at >= ${retentionCutoff}
+        AND visited_at >= ?
     `)
+    .bind(trackingStartedAt)
     .first<SummaryRow>();
 
   const result = await database
@@ -103,9 +109,11 @@ export default async function AnalyticsPage() {
       SELECT id, visited_at, city, region, country, device, browser, source, path, referrer
       FROM visits
       WHERE visited_at >= ${retentionCutoff}
+        AND visited_at >= ?
       ORDER BY visited_at DESC
       LIMIT 100
     `)
+    .bind(trackingStartedAt)
     .all<VisitRow>();
 
   const visits = result.results || [];
