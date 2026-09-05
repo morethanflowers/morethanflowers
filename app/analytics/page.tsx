@@ -118,7 +118,7 @@ export default async function AnalyticsPage() {
           <div>
             <span className={styles.eyebrow}>Owner dashboard</span>
             <h1>Private visit log</h1>
-            <p>Approximate location only. IP addresses are never stored.</p>
+            <p>Approximate location only. This private log does not save IP addresses.</p>
           </div>
           <nav aria-label="Dashboard actions">
             <a href="/analytics">Refresh</a>

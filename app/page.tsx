@@ -518,7 +518,7 @@ export default function Home() {
         )}
 
         <p className="privacy-note">
-          Anonymous visit details may be recorded. Exact addresses and IP addresses are not stored.
+          This private visit log records approximate location and device details; it does not save IP addresses or exact addresses.
         </p>
         <footer>
           <span>Made with accountability</span>
