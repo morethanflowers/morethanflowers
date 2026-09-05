@@ -57,6 +57,10 @@ const responseEndpoint =
   typeof window !== 'undefined' && window.location.hostname === 'morethanflowers.github.io'
     ? 'https://more-than-flowers.ogundejiadeola0.chatgpt.site/api/respond'
     : '/api/respond';
+const visitEndpoint =
+  typeof window !== 'undefined' && window.location.hostname === 'morethanflowers.github.io'
+    ? 'https://more-than-flowers.ogundejiadeola0.chatgpt.site/api/visit'
+    : '/api/visit';
 type Answer = 'yes' | 'no' | 'over';
 const answerEmailLabels: Record<Answer, string> = {
   yes: 'Yes, let us figure this out',
@@ -77,6 +81,79 @@ export default function Home() {
   const [needText, setNeedText] = useState('');
   const [needsStatus, setNeedsStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [responseStatus, setResponseStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+
+  useEffect(() => {
+    let retryTimer: number | undefined;
+    let cancelled = false;
+
+    try {
+      const sessionKey = 'more-than-flowers-visit-session';
+      const existingSession = window.sessionStorage.getItem(sessionKey);
+      if (existingSession?.startsWith('sent:')) return;
+
+      const visitorKey = 'more-than-flowers-visitor';
+      const now = Date.now();
+      const existingVisitor = window.localStorage.getItem(visitorKey);
+      let visitorId = '';
+      let visitorExpiresAt = now + 90 * 24 * 60 * 60 * 1000;
+
+      if (existingVisitor) {
+        try {
+          const saved = JSON.parse(existingVisitor) as { id?: string; expiresAt?: number };
+          if (saved.id && saved.expiresAt && saved.expiresAt > now) {
+            visitorId = saved.id;
+            visitorExpiresAt = saved.expiresAt;
+          }
+        } catch {
+          // Replace an older or invalid anonymous identifier.
+        }
+      }
+
+      visitorId ||= crypto.randomUUID();
+      const pendingSession = existingSession?.startsWith('pending:')
+        ? existingSession.slice('pending:'.length)
+        : '';
+      const sessionId = pendingSession || crypto.randomUUID();
+
+      window.localStorage.setItem(
+        visitorKey,
+        JSON.stringify({ id: visitorId, expiresAt: visitorExpiresAt }),
+      );
+      window.sessionStorage.setItem(sessionKey, `pending:${sessionId}`);
+
+      const recordVisit = async (attempt: number) => {
+        try {
+          const response = await fetch(visitEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              visitorId,
+              sessionId,
+              path: window.location.pathname,
+              referrer: document.referrer,
+            }),
+            keepalive: true,
+          });
+
+          if (!response.ok) throw new Error('Visit could not be recorded.');
+          window.sessionStorage.setItem(sessionKey, `sent:${sessionId}`);
+        } catch {
+          if (!cancelled && attempt < 2) {
+            retryTimer = window.setTimeout(() => void recordVisit(attempt + 1), 1500 * (attempt + 1));
+          }
+        }
+      };
+
+      void recordVisit(0);
+    } catch {
+      // Privacy settings may disable browser storage; the site still works normally.
+    }
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+    };
+  }, []);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -440,6 +517,9 @@ export default function Home() {
           </div>
         )}
 
+        <p className="privacy-note">
+          Anonymous visit details may be recorded. Exact addresses and IP addresses are not stored.
+        </p>
         <footer>
           <span>Made with accountability</span>
           <i />

@@ -196,6 +196,7 @@ button, a { font: inherit; }
 .response-submit small { color: #716963; font: 11px/1.45 Georgia,serif; }
 .response-message { margin: 2px 0 0; color: #c78d78; font: 12px Georgia,serif; }
 .response-message.success { color: #b9a68e; }
+.closing-section > .privacy-note { position: absolute; left: 18px; right: 18px; bottom: 66px; margin: 0; color: #655e58; font: 9px/1.45 Arial,sans-serif; letter-spacing: .04em; }
 .closing-section footer { position: absolute; left: 5vw; right: 5vw; bottom: 30px; display: flex; justify-content: center; align-items: center; gap: 16px; color: #5f5954; text-transform: uppercase; letter-spacing: .2em; font-size: 8px; }
 .closing-section footer i { width: 48px; height: 1px; background: #393532; }
 
